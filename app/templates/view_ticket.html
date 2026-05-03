@@ -33,6 +33,30 @@
     </form>
 </div>
 
+<!-- Comments -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom:1rem;">Comments</h3>
+
+    {% if ticket.comments %}
+        {% for comment in ticket.comments %}
+            <div style="padding:0.75rem 0; border-bottom:1px solid #eee;">
+                <p style="font-size:0.85rem; color:#666; margin-bottom:0.3rem;">
+                    <strong>{{ comment.author.username }}</strong> · {{ comment.created_at.strftime('%b %d, %Y %H:%M') }}
+                </p>
+                <p>{{ comment.body }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color:#666; margin-bottom:1rem;">No comments yet.</p>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('tickets.add_comment', ticket_id=ticket.id) }}" style="margin-top:1rem;">
+        <label>Add a Comment</label>
+        <textarea name="body" rows="3" placeholder="Write a comment..." required></textarea>
+        <button type="submit">Post Comment</button>
+    </form>
+</div>
+
 <!-- Activity Log -->
 <div class="card">
     <h3 style="margin-bottom:1rem;">Activity Log</h3>

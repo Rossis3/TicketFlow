@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
 from app.models import Ticket, User, ActivityLog
+from app.models import Ticket, User, ActivityLog, Comment
 
 tickets = Blueprint('tickets', __name__)
 
@@ -69,4 +70,29 @@ def update_status(ticket_id):
     db.session.commit()
 
     flash('Status updated!')
+    return redirect(url_for('tickets.view_ticket', ticket_id=ticket_id))
+
+@tickets.route('/tickets/<int:ticket_id>/comment', methods=['POST'])
+@login_required
+def add_comment(ticket_id):
+    ticket = Ticket.query.get_or_404(ticket_id)
+    body = request.form.get('body')
+
+    if body:
+        comment = Comment(
+            body=body,
+            author_id=current_user.id,
+            ticket_id=ticket.id
+        )
+        db.session.add(comment)
+
+        log = ActivityLog(
+            action=f'Comment added by {current_user.username}',
+            user_id=current_user.id,
+            ticket_id=ticket.id
+        )
+        db.session.add(log)
+        db.session.commit()
+        flash('Comment added!')
+
     return redirect(url_for('tickets.view_ticket', ticket_id=ticket_id))
