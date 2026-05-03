@@ -6,9 +6,13 @@ A lightweight issue tracking web app built with Flask, designed for small teams.
 
 - User registration and login
 - Create, assign, and prioritize tickets
+- Reassign tickets to different team members
 - Status workflow: Open → In Progress → Resolved → Closed
-- Comments on tickets
-- Activity log for every ticket
+- Filter tickets by assignee (All, My Tickets, Unassigned) and status
+- Comments on tickets for team discussion
+- Activity log tracking all changes on every ticket
+- Delete tickets (creator or admin only)
+- Clean, responsive UI with error pages
 
 ## Tech Stack
 
@@ -54,7 +58,7 @@ python run.py
 
 6. Open your browser and go to `http://127.0.0.1:5000`
 
-> **Note:** This runs locally on your machine. For production deployment, see Flask's deployment docs.
+> **Note:** This runs locally on your machine. For production deployment, see Flask's [deployment docs](https://flask.palletsprojects.com/en/stable/deploying/).
 
 ## Project Structure
 
@@ -82,6 +86,10 @@ TicketFlow/
 ├── requirements.txt
 └── README.md
 ```
+
+## Author
+
+Shealin Rossi - sr.yueyuji@gmail.com
 
 ## License
 
