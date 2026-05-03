@@ -6,11 +6,19 @@
     <a href="{{ url_for('tickets.new_ticket') }}" class="btn">+ New Ticket</a>
 </div>
 
-<!-- Filters -->
-<div style="margin-bottom:1.5rem;">
-    <a href="?filter=all" class="btn" style="{% if filter_by == 'all' %}background:#2c3e50{% else %}background:#888{% endif %}; margin-right:0.5rem;">All</a>
-    <a href="?filter=mine" class="btn" style="{% if filter_by == 'mine' %}background:#2c3e50{% else %}background:#888{% endif %}; margin-right:0.5rem;">My Tickets</a>
-    <a href="?filter=unassigned" class="btn" style="{% if filter_by == 'unassigned' %}background:#2c3e50{% else %}background:#888{% endif %};">Unassigned</a>
+<!-- Filters Row -->
+<div style="margin-bottom:1.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+    <a href="?filter=all&status={{ status_filter }}" class="btn" style="{% if filter_by == 'all' %}background:#2c3e50{% else %}background:#888{% endif %};">All</a>
+    <a href="?filter=mine&status={{ status_filter }}" class="btn" style="{% if filter_by == 'mine' %}background:#2c3e50{% else %}background:#888{% endif %};">My Tickets</a>
+    <a href="?filter=unassigned&status={{ status_filter }}" class="btn" style="{% if filter_by == 'unassigned' %}background:#2c3e50{% else %}background:#888{% endif %};">Unassigned</a>
+
+    <span style="margin: 0 0.5rem; color:#aaa;">|</span>
+
+    <a href="?filter={{ filter_by }}&status=all" class="btn" style="{% if status_filter == 'all' %}background:#2c3e50{% else %}background:#888{% endif %};">All Status</a>
+    <a href="?filter={{ filter_by }}&status=open" class="btn" style="{% if status_filter == 'open' %}background:#27ae60{% else %}background:#888{% endif %};">Open</a>
+    <a href="?filter={{ filter_by }}&status=in-progress" class="btn" style="{% if status_filter == 'in-progress' %}background:#e67e22{% else %}background:#888{% endif %};">In Progress</a>
+    <a href="?filter={{ filter_by }}&status=resolved" class="btn" style="{% if status_filter == 'resolved' %}background:#2980b9{% else %}background:#888{% endif %};">Resolved</a>
+    <a href="?filter={{ filter_by }}&status=closed" class="btn" style="{% if status_filter == 'closed' %}background:#7f8c8d{% else %}background:#888{% endif %};">Closed</a>
 </div>
 
 <!-- Ticket List -->

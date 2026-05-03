@@ -96,3 +96,49 @@ def add_comment(ticket_id):
         flash('Comment added!')
 
     return redirect(url_for('tickets.view_ticket', ticket_id=ticket_id))
+
+
+@tickets.route('/tickets/<int:ticket_id>/reassign', methods=['POST'])
+@login_required
+def reassign_ticket(ticket_id):
+    ticket = Ticket.query.get_or_404(ticket_id)
+
+    if current_user.role != 'admin' and current_user.id != ticket.creator_id:
+        flash('Only the creator or an admin can reassign this ticket.')
+        return redirect(url_for('tickets.view_ticket', ticket_id=ticket_id))
+
+    new_assignee_id = request.form.get('assignee_id') or None
+    old_assignee = ticket.assignee.username if ticket.assignee else 'Nobody'
+    ticket.assignee_id = new_assignee_id
+
+    new_assignee = User.query.get(new_assignee_id).username if new_assignee_id else 'Nobody'
+    log = ActivityLog(
+        action=f'Reassigned from {old_assignee} to {new_assignee} by {current_user.username}',
+        user_id=current_user.id,
+        ticket_id=ticket.id
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    flash('Ticket reassigned!')
+    return redirect(url_for('tickets.view_ticket', ticket_id=ticket_id))
+
+
+@tickets.route('/tickets/<int:ticket_id>/delete', methods=['POST'])
+@login_required
+def delete_ticket(ticket_id):
+    ticket = Ticket.query.get_or_404(ticket_id)
+
+    if current_user.role != 'admin' and current_user.id != ticket.creator_id:
+        flash('Only the creator or an admin can delete this ticket.')
+        return redirect(url_for('tickets.view_ticket', ticket_id=ticket_id))
+
+    # Delete related records first
+    ActivityLog.query.filter_by(ticket_id=ticket.id).delete()
+    Comment.query.filter_by(ticket_id=ticket.id).delete()
+
+    db.session.delete(ticket)
+    db.session.commit()
+
+    flash('Ticket deleted.')
+    return redirect(url_for('main.dashboard'))
