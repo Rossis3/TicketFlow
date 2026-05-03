@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="card" style="margin-bottom: 1.5rem;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+            <h2>{{ ticket.title }}</h2>
+            <p style="margin-top:0.5rem; color:#666;">
+                Created by <strong>{{ ticket.creator.username }}</strong> · 
+                Assigned to <strong>{{ ticket.assignee.username if ticket.assignee else 'Nobody' }}</strong>
+            </p>
+        </div>
+        <div>
+            <span style="background:#2c3e50; color:white; padding:0.3rem 0.8rem; border-radius:4px;">{{ ticket.status }}</span>
+            <span style="background:#e67e22; color:white; padding:0.3rem 0.8rem; border-radius:4px; margin-left:0.5rem;">{{ ticket.priority }}</span>
+        </div>
+    </div>
+
+    <p style="margin-top:1.5rem;">{{ ticket.description or 'No description provided.' }}</p>
+</div>
+
+<!-- Status Update -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom:1rem;">Update Status</h3>
+    <form method="POST" action="{{ url_for('tickets.update_status', ticket_id=ticket.id) }}" style="display:flex; gap:1rem; align-items:center;">
+        <select name="status">
+            <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
+            <option value="in-progress" {% if ticket.status == 'in-progress' %}selected{% endif %}>In Progress</option>
+            <option value="resolved" {% if ticket.status == 'resolved' %}selected{% endif %}>Resolved</option>
+            <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
+        </select>
+        <button type="submit">Update</button>
+    </form>
+</div>
+
+<!-- Activity Log -->
+<div class="card">
+    <h3 style="margin-bottom:1rem;">Activity Log</h3>
+    {% if ticket.logs %}
+        {% for log in ticket.logs %}
+            <div style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.9rem;">
+                <span style="color:#666;">{{ log.timestamp.strftime('%b %d, %Y %H:%M') }}</span> — {{ log.action }}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color:#666;">No activity yet.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

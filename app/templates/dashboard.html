@@ -1,7 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="card">
-    <h2>Welcome, {{ current_user.username }}! 👋</h2>
-    <p style="margin-top: 1rem;">Dashboard coming soon...</p>
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+    <h2>Dashboard</h2>
+    <a href="{{ url_for('tickets.new_ticket') }}" class="btn">+ New Ticket</a>
 </div>
+
+<!-- Filters -->
+<div style="margin-bottom:1.5rem;">
+    <a href="?filter=all" class="btn" style="{% if filter_by == 'all' %}background:#2c3e50{% else %}background:#888{% endif %}; margin-right:0.5rem;">All</a>
+    <a href="?filter=mine" class="btn" style="{% if filter_by == 'mine' %}background:#2c3e50{% else %}background:#888{% endif %}; margin-right:0.5rem;">My Tickets</a>
+    <a href="?filter=unassigned" class="btn" style="{% if filter_by == 'unassigned' %}background:#2c3e50{% else %}background:#888{% endif %};">Unassigned</a>
+</div>
+
+<!-- Ticket List -->
+{% if tickets %}
+    {% for ticket in tickets %}
+    <div class="card" style="margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <a href="{{ url_for('tickets.view_ticket', ticket_id=ticket.id) }}" style="font-weight:bold; color:#2c3e50; text-decoration:none;">{{ ticket.title }}</a>
+            <p style="font-size:0.85rem; color:#666; margin-top:0.3rem;">
+                Assigned to <strong>{{ ticket.assignee.username if ticket.assignee else 'Nobody' }}</strong> · {{ ticket.created_at.strftime('%b %d, %Y') }}
+            </p>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+            <span style="background:#2c3e50; color:white; padding:0.2rem 0.6rem; border-radius:4px; font-size:0.85rem;">{{ ticket.status }}</span>
+            <span style="background:#e67e22; color:white; padding:0.2rem 0.6rem; border-radius:4px; font-size:0.85rem;">{{ ticket.priority }}</span>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="card">
+        <p style="color:#666;">No tickets found. <a href="{{ url_for('tickets.new_ticket') }}">Create one!</a></p>
+    </div>
+{% endif %}
+
 {% endblock %}
