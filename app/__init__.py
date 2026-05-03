@@ -22,5 +22,15 @@ def create_app():
     
     from app.routes.tickets import tickets
     app.register_blueprint(tickets)
+    
+    from flask import render_template
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return render_template('404.html'), 404
+
+    @app.errorhandler(500)
+    def server_error(e):
+        return render_template('500.html'), 500
 
     return app

@@ -21,10 +21,12 @@
 </head>
 <body>
     <nav>
-        <span class="brand">🎫 TicketFlow</span>
+        <a href="{{ url_for('main.dashboard') }}" class="brand">🎫 TicketFlow</a>
         <div>
             {% if current_user.is_authenticated %}
-                <span style="color:white">{{ current_user.username }}</span>
+                <a href="{{ url_for('tickets.new_ticket') }}" style="color:white;">+ New Ticket</a>
+                <span style="color:#aaa; margin: 0 0.5rem;">|</span>
+                <span style="color:white;">{{ current_user.username }}</span>
                 <a href="{{ url_for('auth.logout') }}">Logout</a>
             {% else %}
                 <a href="{{ url_for('auth.login') }}">Login</a>
