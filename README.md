@@ -22,6 +22,14 @@ A lightweight issue tracking web app built with Flask, designed for small teams.
 - Flask-Login + bcrypt
 - pytest
 
+## Screenshots
+
+<img src="docs/login-page.png" width="800"/>
+<img src="docs/new-ticket-creation.png" width="800"/>
+<img src="docs/dashboard.png" width="800"/>
+<img src="docs/filtered-dashboard.png" width="800"/>
+<img src="docs/ticket-details-with-comments.png" width="800"/>
+
 ## Setup
 
 1. Clone the repo:
